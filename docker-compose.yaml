@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0 # 使用MySQL 8.0镜像，可根据需要更改版本
+    container_name: xingxing-mysql # 容器名称
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=xingxing_llm
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - "3306:3306" # 映射端口，宿主机通过3306端口访问容器内的MySQL
+    restart: always # 容器退出时自动重启
