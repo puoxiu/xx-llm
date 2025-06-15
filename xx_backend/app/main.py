@@ -33,9 +33,8 @@ async def lifespan(app: FastAPI):
         print("数据库连接池已关闭")
 
 
-
 app = FastAPI(
-    title=settings.APP_AAME,
+    title=settings.APP_NAME,
     version=settings.APP_VERSION,
     lifespan=lifespan
 )
@@ -45,4 +44,9 @@ app.include_router(user.router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", "0.0.0.0", port=8000, reload=True)
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True
+    )

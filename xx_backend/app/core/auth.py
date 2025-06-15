@@ -1,7 +1,7 @@
 from jose import jwt
 from datetime import datetime, timedelta
 
-from config import settings
+from core.config import settings
 
 
 class AuthTokenHelper:
@@ -11,7 +11,7 @@ class AuthTokenHelper:
         expire = datetime.utcnow() + timedelta(minutes=settings.JWT_TOKEN_EXPIRE_MINUTES)
         to_data.update({"exp": expire})
 
-        return jwt.encode(to_data, settings.SECRET_KEY, algorithms=settings.ALGORITHM)
+        return jwt.encode(to_data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
     @staticmethod
     def token_decode(token)-> dict:

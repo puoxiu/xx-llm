@@ -1,7 +1,7 @@
 # services/auth_service.py
 from models.user import User
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.auth import JWTUtils
+from core.auth import AuthTokenHelper
 from sqlalchemy import select, update, delete
 
 from utils.hash import verify_password, get_password_hash
@@ -72,5 +72,5 @@ def login_user(db: AsyncSession, email: str, password: str):
     user = db.query(User).filter_by(email=email).first()
     if not user or not verify_password(password, user.password_hash):
         raise ValueError("Invalid credentials")
-    token = JWTUtils.token_encode({"sub": str(user.id)})
+    token = AuthTokenHelper.token_encode({"sub": str(user.id)})
     return token, user

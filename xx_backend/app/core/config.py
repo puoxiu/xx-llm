@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     # 数据库-MySQL
     DB_USER: str = "root"
     DB_PASSWORD: str = "root"
-    DB_HOST: str = "localhost"
+    DB_HOST: str = "182.61.13.121"
     DB_PORT: int = 3306
     DB_NAME: str = "xingxing_llm"
     
