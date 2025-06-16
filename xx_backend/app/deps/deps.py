@@ -1,7 +1,7 @@
 # deps.py
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
+from jose import JWTError
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import AsyncGenerator
@@ -10,16 +10,19 @@ from typing import AsyncGenerator
 from models.user import User
 from db.database import async_session
 from core.config import settings
+from core.auth import AuthTokenHelper
+from services.user import UserService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/user/login")
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(async_session)) -> User:
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(async_session)) -> User:
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        user_id: str = payload.get("sub")
+        payload = AuthTokenHelper.token_decode(token)
+        user_email: str = payload.get("email")
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
-    user = db.query(User).get(int(user_id))
+    
+    user = await UserService.get_user_by_email(db, user_email)
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
     return user
