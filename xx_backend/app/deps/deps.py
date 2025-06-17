@@ -2,7 +2,6 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import AsyncGenerator
 
@@ -13,20 +12,7 @@ from core.config import settings
 from core.auth import AuthTokenHelper
 from services.user import UserService
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/user/login")
-
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(async_session)) -> User:
-    try:
-        payload = AuthTokenHelper.token_decode(token)
-        user_email: str = payload.get("email")
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    
-    user = await UserService.get_user_by_email(db, user_email)
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-    return user
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/user/login1")
 
 # 依赖注入 + 自动资源管理的结合
 # 依赖注入：函数的参数是其他函数的返回值，这种方式称为依赖注入
@@ -37,3 +23,14 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
         yield db_session
     finally:
         await db_session.close()
+
+
+async def get_current_payload(token: str = Depends(oauth2_scheme)) -> dict:
+    try:
+        payload = AuthTokenHelper.token_decode(token)
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    return payload
+
+

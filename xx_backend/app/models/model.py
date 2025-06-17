@@ -32,4 +32,4 @@ class Model(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # 关联用户
-    user = relationship("User", back_populates="models")
+    user = relationship("User", back_populates="model")

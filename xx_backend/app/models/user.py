@@ -15,4 +15,4 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # 关联模型配置表
-    model_configs = relationship("UserModelConfig", back_populates="user", cascade="all, delete-orphan")
+    model = relationship("Model", back_populates="user", cascade="all, delete-orphan")

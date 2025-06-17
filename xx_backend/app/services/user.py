@@ -42,9 +42,3 @@ class UserService:
         response = await async_session.execute(delete(User).where(User.id == user_id))
         await async_session.commit()
         return response.rowcount > 0
-
-    @staticmethod
-    async def check_user_phone_email_and_password(async_session: AsyncSession, email: str, password_hashed: str) -> User | None:
-        result = await async_session.execute(select(User).where(User.email == email and User.password_hashed == password_hashed))
-        user = result.scalar_one_or_none()
-        return user

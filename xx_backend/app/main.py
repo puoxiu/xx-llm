@@ -6,7 +6,7 @@ from sqlalchemy import text
 
 from core.config import settings
 from db.database import async_engine, Base
-from api import user
+from api import user, model
 
 
 # 生命周期管理器
@@ -40,7 +40,7 @@ app = FastAPI(
 )
 
 app.include_router(user.router)
-
+app.include_router(model.router)
 
 if __name__ == "__main__":
     import uvicorn
